@@ -19,8 +19,14 @@ try:
     try:
         web = ctx.web
         loaded_web = ctx.load(web)
-        print(loaded_web)
-        print("Website Loaded?")
+        ctx.execute_query
+        print("Website Loaded")
+        file_names = []
+        files = ctx.web.get_file_by_server_relative_url(url)
+        print("grabbed files")
+        for files in ctx.files:
+            file_names.append(files)
+        print(file_names)
     except:
         print("Error Connecting")
 except:
