@@ -1,5 +1,6 @@
 # Sharepoint URL 
-# https://wwu2.sharepoint.com/sites/KaplanLab/Shared%20Documents/Forms/AllItems.aspx?id=%2Fsites%2FKaplanLab%2FShared%20Documents%2FIHC%20Cohort%202&newTargetListUrl=%2Fsites%2FKaplanLab%2FShared%20Documents&viewpath=%2Fsites%2FKaplanLab%2FShared%20Documents%2FForms%2FAllItems%2Easpx
+# Reference 
+# https://learn.microsoft.com/en-us/sharepoint/dev/solution-guidance/security-apponly-azureacs
 import os
 from office365.runtime.auth.authentication_context import AuthenticationContext
 from office365.sharepoint.client_context import ClientContext
