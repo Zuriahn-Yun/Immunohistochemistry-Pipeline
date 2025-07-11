@@ -2,38 +2,36 @@
 # Reference 
 # https://learn.microsoft.com/en-us/sharepoint/dev/solution-guidance/security-apponly-azureacs
 import os
-from office365.runtime.auth.authentication_context import AuthenticationContext
-from office365.sharepoint.client_context import ClientContext
-from office365.sharepoint.files.file import File
-from office365.runtime.auth.user_credential import UserCredential
 import requests
-from dotenv import load_dotenv
+from readlif.reader import LifFile
+import numpy as np
+import time
 
-load_dotenv()
+"""
+TEST SCRIPT FOR POWER AUTOMATE
+RUNNING ON A SMALL LIF FILE 
+"""
+path = "IHC Cohort 2 6-4-25.lif"
 
-try:
-    url = os.getenv("url")
-    print(url)
-    username = os.getenv("username")
-    password = os.getenv("password")
+lif_file = LifFile(path)
+
+data = []
+frame_count = 1
+for image in lif_file.get_iter_image():
+    curr = []
+    for frame in image.get_iter_t():
+        arr = np.array(frame)
+        arr.flatten()
+        curr.append(arr)
+        print(frame_count)
+        frame_count+=1
+        print(arr.shape)
+    print(len(curr))
+    print("Finished an Image")
+    data.append(curr)
     
-      
-    credentials = UserCredential(username,password)
-    print("Credentials Loaded")
-    ctx = ClientContext(url).with_credentials(credentials)
-    print("Connected")
-    try:
-        folder_url ="/sites/KaplanLab/Shared Documents/IHC Cohort 2"
-        folder = ctx.web.get_folder_by_server_relative_url(folder_url)
-        ctx.load(folder.files)
-        ctx.execute_query()
-        
-        for file in folder.files:
-            print(file.properties["Name"])
-        
-    except Exception as e:
-        print(e)
-except Exception as e:
-    print(e)
-    
- 
+data = np.array(data)
+data.flatten()
+print("Saving")
+np.savetxt("data.csv",data,delimiter=',')
+print("Saved")
