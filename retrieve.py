@@ -21,7 +21,10 @@ for image in lif_file.get_iter_image():
     curr = []
     for frame in image.get_iter_t():
         arr = np.array(frame)
+        print(arr)
         arr.flatten()
+        print(arr)
+        
         curr.append(arr)
         print(frame_count)
         frame_count+=1
@@ -29,9 +32,9 @@ for image in lif_file.get_iter_image():
     print(len(curr))
     print("Finished an Image")
     data.append(curr)
-    
-data = np.array(data)
-data.flatten()
-print("Saving")
-np.savetxt("data.csv",data,delimiter=',')
-print("Saved")
+
+import pandas as pd
+
+df = pd.DataFrame(data)
+
+df.to_csv('data.csv',index=False)
