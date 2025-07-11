@@ -8,8 +8,10 @@ import numpy as np
 import time
 
 """
+------------------------------------------------------------------
 TEST SCRIPT FOR POWER AUTOMATE
 RUNNING ON A SMALL LIF FILE 
+------------------------------------------------------------------
 """
 path = "IHC Cohort 2 6-4-25.lif"
 
