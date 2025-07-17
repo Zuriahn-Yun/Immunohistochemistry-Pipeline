@@ -13,6 +13,7 @@ TEST SCRIPT FOR POWER AUTOMATE
 RUNNING ON A SMALL LIF FILE 
 ------------------------------------------------------------------
 """
+
 path = "IHC Cohort 2 6-4-25.lif"
 
 lif_file = LifFile(path)
@@ -31,6 +32,7 @@ for image in lif_file.get_iter_image():
         print(frame_count)
         frame_count+=1
         print(arr.shape)
+        
     print(len(curr))
     print("Finished an Image")
     data.append(curr)
