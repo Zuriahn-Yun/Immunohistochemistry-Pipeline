@@ -50,21 +50,30 @@ def display_lif(file_path,rows,columns):
             curr_column +=1 
             if curr_column == columns + 1:
                 curr_row +=1
-            curr_column = curr_column % columns
+                curr_column = 1
+            print(curr_row)
+            print(curr_column)
             # fig.show()
             # time.sleep(60)
             # fig.add_trace(go.Image(z=np_image), row=1, col=2)
     fig.update_layout(height=512 * rows, width=512 * columns, showlegend=False)
     fig.show()
             
-           
+def read_metadata(file_path):
+    lif = LifFile(file_path)
+    for image in lif.get_iter_image():
+        print(f"Image name: {image.name}")
+        print("Metadata:")
+        for k, v in image.metadata.items():
+            print(f"  {k}: {v}")
             
     
 
 
 def main():
         url = "IHC Cohort 2 6-4-25.lif"
-        display_lif(url,6,8)
+        # display_lif(url,6,8)
+        read_metadata(url)
 
 if __name__ == "__main__":
     main()
