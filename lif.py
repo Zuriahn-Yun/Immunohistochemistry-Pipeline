@@ -3,6 +3,9 @@ from readlif.reader import LifFile
 import numpy as np
 import plotly.express as px
 import plotly.graph_objects as go
+from PIL import Image
+import time
+from plotly.subplots import make_subplots
 
 def analyze_lif(file_path):
     try:
@@ -22,31 +25,46 @@ def analyze_lif(file_path):
         
         """ Display Image """
         fig = px.imshow(np_image)
+        print(fig)
         fig.show()        
          
     except Exception as e:
         print('Error: ' + str(e))
 
-def display_lif(file_path):
+def display_lif(file_path,rows,columns):
     
     lif = LifFile(file_path)
-    fig = go.Figure()
-    
+    fig = make_subplots(rows,columns)
+    print(lif)
+    curr_row = 1
+    curr_column = 1
     for image in lif.get_iter_image():
-        for frame in image.get_iter_image():
+        print(image)
+        for frame in image.get_iter_t():
+            print(frame)
+            np_image = np.array(frame)
+            curr_px = px.imshow(np_image)
+            trace = curr_px.data[0]
+            fig.add_trace(trace, row=curr_row, col=curr_column)
             
-            arr = np.array(frame)
-            fig.add_layout_image(
-                px.imshow(image)
-            )
-            
+            curr_column +=1 
+            if curr_column == columns + 1:
+                curr_row +=1
+            curr_column = curr_column % columns
+            # fig.show()
+            # time.sleep(60)
+            # fig.add_trace(go.Image(z=np_image), row=1, col=2)
+    fig.update_layout(height=512 * rows, width=512 * columns, showlegend=False)
     fig.show()
-
+            
+           
+            
+    
 
 
 def main():
         url = "IHC Cohort 2 6-4-25.lif"
-        display_lif(url)
+        display_lif(url,6,8)
 
 if __name__ == "__main__":
     main()
