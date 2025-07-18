@@ -6,6 +6,7 @@ import plotly.graph_objects as go
 from PIL import Image
 import time
 from plotly.subplots import make_subplots
+import pandas as pd 
 
 def analyze_lif(file_path):
     try:
@@ -59,21 +60,36 @@ def display_lif(file_path,rows,columns):
     fig.update_layout(height=512 * rows, width=512 * columns, showlegend=False)
     fig.show()
             
-def read_metadata(file_path):
+def concat(file_path,rows,columns):
+    res = []
     lif = LifFile(file_path)
     for image in lif.get_iter_image():
-        print(f"Image name: {image.name}")
-        print("Metadata:")
-        for k, v in image.metadata.items():
-            print(f"  {k}: {v}")
-            
+        print(image)
+        for frame in image.get_iter_t():
+            np_image = np.array(frame)
+            res.append(np_image)
+    dataframes = []
+    # for i in range(rows):
+    df1 = pd.DataFrame(res[0])
+    dataframes.append(df1)
     
+    df2 = pd.DataFrame(res[1])
+    dataframes.append(df2)
+    
+    result_horizontal = pd.concat([df1, df2], axis=1,ignore_index=True)
+    print(result_horizontal)
+
+    fig = px.imshow(result_horizontal)
+    fig.show()
+            
+            
+            
 
 
 def main():
         url = "IHC Cohort 2 6-4-25.lif"
         # display_lif(url,6,8)
-        read_metadata(url)
+        concat(url,6,8)
 
 if __name__ == "__main__":
     main()
