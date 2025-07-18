@@ -1,11 +1,11 @@
 from analyze import get_rgb
 from readlif.reader import LifFile
 import numpy as np
-from skimage.io import imshow
+import plotly.express as px
+import plotly.graph_objects as go
 
 def analyze_lif(file_path):
     try:
-        
         lif_file = LifFile(file_path)
         
         """ Display How many Images """
@@ -21,20 +21,32 @@ def analyze_lif(file_path):
         print(np_image.shape)
         
         """ Display Image """
-        imshow(np_image)
-        
-        
-         
+        fig = px.imshow(np_image)
+        fig.show()        
          
     except Exception as e:
         print('Error: ' + str(e))
 
+def display_lif(file_path):
+    
+    lif = LifFile(file_path)
+    fig = go.Figure()
+    
+    for image in lif.get_iter_image():
+        for frame in image.get_iter_image():
+            
+            arr = np.array(frame)
+            fig.add_layout_image(
+                px.imshow(image)
+            )
+            
+    fig.show()
 
 
 
 def main():
         url = "IHC Cohort 2 6-4-25.lif"
-        analyze_lif(url)
+        display_lif(url)
 
 if __name__ == "__main__":
     main()
