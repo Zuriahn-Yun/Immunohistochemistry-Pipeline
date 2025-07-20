@@ -60,38 +60,53 @@ def display_lif(file_path,rows,columns):
     fig.update_layout(height=512 * rows, width=512 * columns, showlegend=False)
     fig.show()
             
-def concat(file_path,rows,columns):
-    # res is a collection of every dataframe
-    res = []
+def display(file_path,rows,columns):
+    """ This displays a lif file in plotly
+
+    Args:
+        file_path (_type_): _description_
+        rows (_type_): _description_
+        columns (_type_): _description_
+
+    Returns:
+        _type_: _description_
+    """
+    
+    # add all the images to one list
+    images = []
     lif = LifFile(file_path)
     for image in lif.get_iter_image():
         print(image)
         for frame in image.get_iter_t():
             np_image = np.array(frame)
-            res.append(np_image)
-            
+            images.append(np_image)
+    
+    # Concat every row and add to a list
     row_dataframes = []
-    # if we have 48 dataframes
-    # 6 rows, 8 columns 
+
     for i in range(rows):
         curr = []
         for k in range(columns):
-            df = pd.DataFrame(res[(i * columns) + k])
+            df = pd.DataFrame(images[(i * columns) + k])
             curr.append(df)
         curr_row = pd.concat(curr,axis=1,ignore_index=True)
         row_dataframes.append(curr_row)
-            
-    result_horizontal = pd.concat(row_dataframes, axis=0,ignore_index=True)
-    print(result_horizontal)
+    
+    # Concat all the rows into one very large dataframe
+    result = pd.concat(row_dataframes, axis=0,ignore_index=True)
 
-    fig = px.imshow(result_horizontal)
+    # Display the final image
+    fig = px.imshow(result)
     fig.show()   
+    
+    # Return the Dataframe
+    return result
 
 
 def main():
         url = "IHC Cohort 2 6-4-25.lif"
-        # display_lif(url,6,8)
-        concat(url,6,8)
+        
+        display(url,6,8)
 
 if __name__ == "__main__":
     main()
