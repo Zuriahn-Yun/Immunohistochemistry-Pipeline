@@ -61,6 +61,7 @@ def display_lif(file_path,rows,columns):
     fig.show()
             
 def concat(file_path,rows,columns):
+    # res is a collection of every dataframe
     res = []
     lif = LifFile(file_path)
     for image in lif.get_iter_image():
@@ -68,22 +69,23 @@ def concat(file_path,rows,columns):
         for frame in image.get_iter_t():
             np_image = np.array(frame)
             res.append(np_image)
-    dataframes = []
-    # for i in range(rows):
-    df1 = pd.DataFrame(res[0])
-    dataframes.append(df1)
-    
-    df2 = pd.DataFrame(res[1])
-    dataframes.append(df2)
-    
-    result_horizontal = pd.concat([df1, df2], axis=1,ignore_index=True)
+            
+    row_dataframes = []
+    # if we have 48 dataframes
+    # 6 rows, 8 columns 
+    for i in range(rows):
+        curr = []
+        for k in range(columns):
+            df = pd.DataFrame(res[(i * columns) + k])
+            curr.append(df)
+        curr_row = pd.concat(curr,axis=1,ignore_index=True)
+        row_dataframes.append(curr_row)
+            
+    result_horizontal = pd.concat(row_dataframes, axis=0,ignore_index=True)
     print(result_horizontal)
 
     fig = px.imshow(result_horizontal)
-    fig.show()
-            
-            
-            
+    fig.show()   
 
 
 def main():
