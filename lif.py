@@ -31,12 +31,12 @@ def display_lif(file_path,rows,columns):
     """ This displays a lif file in plotly
 
     Args:
-        file_path (_type_): _description_
-        rows (_type_): _description_
-        columns (_type_): _description_
+        file_path (string): Local file path.
+        rows (int): The number of rows in the image.
+        columns (int): The number of columns in the image.
 
     Returns:
-        np.array : the full lif file in np.array form
+        np.array : Displays and returns the full lif file in np.array form
     """
     
     # add all the images to one list
@@ -73,12 +73,12 @@ def lif_to_np_array(file_path,rows,columns):
     """ This displays a lif file in plotly
 
     Args:
-        file_path (_type_): _description_
-        rows (_type_): _description_
-        columns (_type_): _description_
+        file_path (string): Local file path.
+        rows (int): The number of rows in the image.
+        columns (int): The number of columns in the image.
 
     Returns:
-        np.array : the full lif file in np.array form
+        np.array : Returns the full lif file in np.array form
     """
     
     # add all the images to one list
@@ -107,11 +107,20 @@ def lif_to_np_array(file_path,rows,columns):
     # Return the Dataframe
     return lif_array
     
+def export_images(lif_dataframe):
+    print("error block")
+
+
+
 def analyze_lif(lif_dataframe):
     
     # this might be the goat color package
     # https://pypi.org/project/extcolors/
+    
+    colors, pixel_count = extcolors.extract_from_path("gameboy.png")
     print("error")
+
+    
     
     
 def analyze_lifext(lif_ext_path):
