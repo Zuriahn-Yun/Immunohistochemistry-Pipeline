@@ -9,6 +9,8 @@ from plotly.subplots import make_subplots
 import pandas as pd 
 from functools import reduce
 import os
+import extcolors
+
 
 def delete_lif(file_path):
     """ This will delete a lif file, they are typically very large and deleting them can save space to analyze another.
@@ -105,8 +107,12 @@ def lif_to_np_array(file_path,rows,columns):
     # Return the Dataframe
     return lif_array
     
-def analyze_lif(lif_np_array):
-    print(lif_np_array)
+def analyze_lif(lif_dataframe):
+    
+    # this might be the goat color package
+    # https://pypi.org/project/extcolors/
+    print("error")
+    
     
 def analyze_lifext(lif_ext_path):
     # This does not work 
