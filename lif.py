@@ -10,7 +10,7 @@ import pandas as pd
 from functools import reduce
 import os
 import extcolors
-
+import kaleido
 
 def delete_lif(file_path):
     """ This will delete a lif file, they are typically very large and deleting them can save space to analyze another.
@@ -69,7 +69,7 @@ def display_lif(file_path,rows,columns):
     # Return the Dataframe
     return result
 
-def lif_to_np_array(file_path,rows,columns):
+def lif_to_df(file_path,rows,columns):
     """ This displays a lif file in plotly
 
     Args:
@@ -107,10 +107,11 @@ def lif_to_np_array(file_path,rows,columns):
     # Return the Dataframe
     return lif_array
     
-def export_images(lif_dataframe):
-    print("error block")
-
-
+def export_images(lif_dataframe, name):
+    # Use kaleido to save as a png and put in the export folder
+    fig = px.imshow(lif_dataframe)
+    fig.write_image("export_images/" + str(name) + ".png")   
+    
 
 def analyze_lif(lif_dataframe):
     
@@ -120,8 +121,6 @@ def analyze_lif(lif_dataframe):
     colors, pixel_count = extcolors.extract_from_path("gameboy.png")
     print("error")
 
-    
-    
     
 def analyze_lifext(lif_ext_path):
     # This does not work 
@@ -157,13 +156,13 @@ def main():
         lifext = "IHC Cohort 2 5-27-25.lifext"
         lif = "IHC Cohort 2 5-27-25.lif"
         
-        print(get_count_images(lif_other))
-        count = get_count_images(lif)
-        print(factors(count))
+        # print(get_count_images(lif_other))
+        # count = get_count_images(lif)
+        # print(factors(count))
         
-        display_lif(lif,13,3)
-        extract_ext = LifFile(lif)
-        print("Extracted")
+        res = lif_to_df(lif,13,3)
+        export_images(res,"test")
+        
 
 if __name__ == "__main__":
     main()
