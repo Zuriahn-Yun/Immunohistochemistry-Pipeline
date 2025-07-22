@@ -113,17 +113,22 @@ def export_images(lif_dataframe, name):
     fig.write_image("export_images/" + str(name) + ".png")
     
 def display_individual_frames(file_path,rows,columns):
-    fig = make_subplots(rows=rows, cols=columns)
     lif = LifFile(file_path)
-    image_arrays = []
+    fig = make_subplots(rows=rows,cols=columns)
+    curr_column = 1
+    curr_row = 1
+    images = []
     for image in lif.get_iter_image():
-        for frame in image.get_iter_t():
+         for frame in image.get_iter_t():
             np_image = np.array(frame)
-            image_arrays.append(np_image)
+            trace = px.imshow(np_image).data[0]
+            images.append(trace)
             
-    for i in range(len(image_arrays)):
-        fig.add_trace(px.imshow(image_arrays[i]), row=i * rows,col = i % columns)
-            
+    image_index = 0
+    for i in range(1,rows+1,1):
+        for j in range(1,columns+1,1):
+            fig.add_trace(images[image_index],row = i,col=j)
+            image_index+=1
     fig.show()
 
 def analyze_lif(lif_dataframe):
