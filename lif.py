@@ -110,8 +110,21 @@ def lif_to_df(file_path,rows,columns):
 def export_images(lif_dataframe, name):
     # Use kaleido to save as a png and put in the export folder
     fig = px.imshow(lif_dataframe)
-    fig.write_image("export_images/" + str(name) + ".png")   
+    fig.write_image("export_images/" + str(name) + ".png")
     
+def display_individual_frames(file_path,rows,columns):
+    fig = make_subplots(rows=rows, cols=columns)
+    lif = LifFile(file_path)
+    image_arrays = []
+    for image in lif.get_iter_image():
+        for frame in image.get_iter_t():
+            np_image = np.array(frame)
+            image_arrays.append(np_image)
+            
+    for i in range(len(image_arrays)):
+        fig.add_trace(px.imshow(image_arrays[i]), row=i * rows,col = i % columns)
+            
+    fig.show()
 
 def analyze_lif(lif_dataframe):
     
@@ -158,10 +171,8 @@ def main():
         
         # print(get_count_images(lif_other))
         # count = get_count_images(lif)
-        # print(factors(count))
-        
-        res = lif_to_df(lif,13,3)
-        export_images(res,"test")
+        # print(factors(count))   
+        display_individual_frames(lif,13,3)
         
 
 if __name__ == "__main__":
