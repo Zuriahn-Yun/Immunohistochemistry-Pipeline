@@ -34,6 +34,11 @@ for image in lif.get_iter_image():
     for frame in image.get_iter_t():
         frame_count +=1
         img = Image.fromarray(np.array(frame))
+        colors,pixel_count = extcolors.extract_from_image(img)
+        print(colors)
+        
+        break
+    break
         
 print(image_count)
 print(frame_count)
