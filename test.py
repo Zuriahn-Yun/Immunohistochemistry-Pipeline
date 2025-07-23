@@ -27,6 +27,8 @@ LIF File --->
                 Channel3--->
             Frame2--->
         Image2--->  
+Do a max projection over Z per channel -> 3 Flattened images
+Stack them -> RGB Images.....
 ------------------------------------------------------------------
 """
 
