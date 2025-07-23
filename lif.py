@@ -114,21 +114,39 @@ def export_images(lif_dataframe, name):
     
 def display_individual_frames(file_path,rows,columns):
     lif = LifFile(file_path)
-    fig = make_subplots(rows=rows,cols=columns)
-    curr_column = 1
-    curr_row = 1
+    fig = make_subplots(rows=rows, cols=columns)
+    
     images = []
+    
+    # Collect all image arrays
     for image in lif.get_iter_image():
-         for frame in image.get_iter_t():
+        for frame in image.get_iter_t():
             np_image = np.array(frame)
-            trace = px.imshow(np_image).data[0]
-            images.append(trace)
             
+            images.append(np_image)
+    
+    print(f"Found {len(images)} total frames")
+    
+    # Add traces to subplots
     image_index = 0
-    for i in range(1,rows+1,1):
-        for j in range(1,columns+1,1):
-            fig.add_trace(images[image_index],row = i,col=j)
-            image_index+=1
+    for i in range(1, rows + 1):
+        for j in range(1, columns + 1):
+            if image_index >= len(images):
+                break
+                
+            # Create a temporary figure to get the trace
+            temp_fig = px.imshow(images[image_index])
+            trace = temp_fig.data[0]
+            
+            # Add the trace to our subplot
+            fig.add_trace(trace, row=i, col=j)
+            
+            image_index += 1
+        
+        if image_index >= len(images):
+            break
+    # From all the analyzed image the size is 512 x 512
+    fig.update_layout(height= 512 * rows, width= 512 * columns)
     fig.show()
 
 def analyze_lif(lif_dataframe):
@@ -177,7 +195,7 @@ def main():
         # print(get_count_images(lif_other))
         # count = get_count_images(lif)
         # print(factors(count))   
-        display_individual_frames(lif,13,3)
+        display_individual_frames(lif_other,6,8)
         
 
 if __name__ == "__main__":
