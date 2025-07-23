@@ -8,6 +8,7 @@ import numpy as np
 import time
 from PIL import Image
 import readlif
+import extcolors
 
 """
 ------------------------------------------------------------------
@@ -32,6 +33,7 @@ for image in lif.get_iter_image():
     image_count +=1
     for frame in image.get_iter_t():
         frame_count +=1
+        img = Image.fromarray(np.array(frame))
         
 print(image_count)
 print(frame_count)
