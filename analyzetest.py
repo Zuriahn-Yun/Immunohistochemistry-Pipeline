@@ -1,6 +1,3 @@
-# Sharepoint URL 
-# Reference 
-# https://learn.microsoft.com/en-us/sharepoint/dev/solution-guidance/security-apponly-azureacs
 import os
 import requests
 from readlif.reader import LifFile
@@ -63,6 +60,8 @@ def closest_color(rgb):
     return closest_color
 
 url = "IHC Cohort 2 6-4-25.lif"
+
+
 # In this data I only have one frame per image 
 lif = LifFile(url)
 image_count = 0
