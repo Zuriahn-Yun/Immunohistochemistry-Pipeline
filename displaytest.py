@@ -34,6 +34,11 @@ for image_idx, image in enumerate(lif.get_iter_image()):
             z_slices.append(np.array(frame))
         
         # Stack and take maximum projection for this channel
+        # np.max -> for Maximum Intensity Projection
+        # np.mean -> for Average Intensity Projection
+        # np.sum -> for Sum Projection
+        # np.median -> for median Projection
+        # Could also try PCA
         z_stack = np.stack(z_slices, axis=0)  # Shape: (75, 512, 512)
         max_projection = np.max(z_stack, axis=0)  # Shape: (512, 512)
         channel_max_projections.append(max_projection)
