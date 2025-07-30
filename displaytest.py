@@ -8,35 +8,66 @@ import readlif
 import extcolors
 import math
 import pandas as pd 
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
+import kaleido
+
 
 url = "IHC Cohort 2 6-4-25.lif"
-
 lif = LifFile(url)
-image_count = 0
-frame_count = 0
-colors = []
-for image in lif.get_iter_image():
+
+image_list = []
+
+for image_idx, image in enumerate(lif.get_iter_image()):
+    print(f"Processing image {image_idx + 1}/48")
+    print(f"Image Dimensions {image.dims}")
+    z_stack_size = image.dims[2]  # 75 Z-Slices
     
-    image_count +=1
-    print("Image Dimensions: ",image.dims)
+    # Grab each Channel to process
+    channel_max_projections = []
     
-    x_size = image.dims[0]
-    y_size = image.dims[1]
-    z_stack = image.dims[2]
-    t_val = image.dims[3]
-    m_val = image.dims[4]
-    
-    curr = image.get_frame()
-    
-    for frame in image.get_iter_t():
-        frame_count+=1
-        print("Frame Size: ",frame.size)
+    for channel in range(3):  # 3 channels (Red, Green, Blue)
+        # GRab all the Z-Slices
+        z_slices = []
+        for z in range(z_stack_size):
+            frame = image.get_frame(z=z, t=0, c=channel)
+            z_slices.append(np.array(frame))
         
-        for z in range(z_stack):
-            frame = image.get_frame(z=z, t=0)
-            
-            # Size (512,512)
-            
-            
-print("Image Count:", image_count)
-print("Frame Count:", frame_count)
+        # Stack and take maximum projection for this channel
+        z_stack = np.stack(z_slices, axis=0)  # Shape: (75, 512, 512)
+        max_projection = np.max(z_stack, axis=0)  # Shape: (512, 512)
+        channel_max_projections.append(max_projection)
+    
+    # Combine 3 channels into RGB
+    rgb_image = np.stack([
+        channel_max_projections[0],  # Red 
+        channel_max_projections[1],  # Green 
+        channel_max_projections[2]   # Blue 
+    ], axis=2)                      # Shape: (512, 512, 3)
+    
+    # Normalize and convert to uint8
+    rgb_image = (rgb_image / rgb_image.max() * 255).astype(np.uint8)
+    
+    # Convert to PIL and display
+    composite_image = Image.fromarray(rgb_image)
+    image_list.append(composite_image)
+    
+np_images = [np.array(img) for img in image_list]
+total = len(np_images)
+cols = 6 
+rows = (total + cols - 1) // cols
+
+fig = make_subplots(rows=rows, cols=cols, subplot_titles=[f"Image {i+1}" for i in range(total)])
+
+for idx, img in enumerate(image_list):
+    row = idx // cols + 1
+    col = idx % cols + 1
+
+     # Add image to subplot
+    fig.add_trace(
+        go.Image(z=img),
+        row=row, col=col
+    )
+
+fig.update_layout(height=512*rows, width=512*cols, title_text="IHC Cohort 2 6-4-25")
+fig.show()
