@@ -40,7 +40,7 @@ for image_idx, image in enumerate(lif.get_iter_image()):
         # np.median -> for median Projection
         # Could also try PCA
         z_stack = np.stack(z_slices, axis=0)  # Shape: (75, 512, 512)
-        max_projection = np.max(z_stack, axis=0)  # Shape: (512, 512)
+        max_projection = np.median(z_stack, axis=0)  # Shape: (512, 512)
         channel_max_projections.append(max_projection)
     
     # Combine 3 channels into RGB
@@ -74,5 +74,5 @@ for idx, img in enumerate(image_list):
         row=row, col=col
     )
 
-fig.update_layout(height=512*rows, width=512*cols, title_text="IHC Cohort 2 6-4-25")
+fig.update_layout(height=512*rows, width=512*cols, title_text="IHC Cohort 2 6-4-25: Using Median Projection")
 fig.show()
