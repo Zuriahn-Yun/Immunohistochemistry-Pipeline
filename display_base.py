@@ -18,6 +18,10 @@ lif = LifFile(url)
 
 image_list = []
 
+red_percentile = 0.7
+green_percentile = 0.4
+blue_percentile = 0.4
+
 for image_idx, image in enumerate(lif.get_iter_image()):
     print(f"Processing image {image_idx + 1}/48")
     print(f"Image Dimensions {image.dims}")
@@ -33,16 +37,30 @@ for image_idx, image in enumerate(lif.get_iter_image()):
             frame = image.get_frame(z=z, t=0, c=channel)
             z_slices.append(np.array(frame))
         
+        
         # Stack and take maximum projection for this channel
         # np.max -> for Maximum Intensity Projection
         # np.mean -> for Average Intensity Projection
         # np.sum -> for Sum Projection
         # np.median -> for median Projection
         # Could also try PCA
-        z_stack = np.stack(z_slices, axis=0)  # Shape: (75, 512, 512)
-        max_projection = np.median(z_stack, axis=0)  # Shape: (512, 512)
-        channel_max_projections.append(max_projection)
-    
+        
+        # RED Channel
+        if channel == 0:
+            z_stack = np.stack(z_slices, axis=0)  # Shape: (75, 512, 512)
+            max_projection = np.percentile(z_stack,red_percentile, axis=0)  # Shape: (512, 512)
+            channel_max_projections.append(max_projection)
+        # GREEN Channel
+        if channel == 1:
+            z_stack = np.stack(z_slices, axis=0)  # Shape: (75, 512, 512)
+            max_projection = np.percentile(z_stack,green_percentile, axis=0)  # Shape: (512, 512)
+            channel_max_projections.append(max_projection)
+        # BLUE Channel
+        if channel == 2:
+            z_stack = np.stack(z_slices, axis=0)  # Shape: (75, 512, 512)
+            max_projection = np.percentile(z_stack,blue_percentile, axis=0)  # Shape: (512, 512)
+            channel_max_projections.append(max_projection)
+            
     # Combine 3 channels into RGB
     rgb_image = np.stack([
         channel_max_projections[0],  # Red 
@@ -74,5 +92,5 @@ for idx, img in enumerate(image_list):
         row=row, col=col
     )
 
-fig.update_layout(height=512*rows, width=512*cols, title_text="IHC Cohort 2 6-4-25: Using Median Projection")
+fig.update_layout(height=512*rows, width=512*cols, title_text="IHC Cohort 2 6-4-25: Red Percentile: " + str(red_percentile) + ", Blue Percentile: " + str(blue_percentile) + ", Green Percentile: " + str(green_percentile))
 fig.show()
