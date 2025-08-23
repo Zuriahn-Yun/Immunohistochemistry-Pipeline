@@ -18,12 +18,14 @@ lif = LifFile(url)
 
 image_list = []
 
+
+# Percentiles 75 = 0.75 percent
 red_percentile = 75
 green_percentile = 30
 blue_percentile = 30
 
 # Display each seperately and analyze that way?
-
+# Waiting on response
 
 for image_idx, image in enumerate(lif.get_iter_image()):
     print(f"Processing image {image_idx + 1}/48")
