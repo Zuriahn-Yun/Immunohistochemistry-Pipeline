@@ -18,9 +18,12 @@ lif = LifFile(url)
 
 image_list = []
 
-red_percentile = 0.7
-green_percentile = 0.4
-blue_percentile = 0.4
+red_percentile = 75
+green_percentile = 30
+blue_percentile = 30
+
+# Display each seperately and analyze that way?
+
 
 for image_idx, image in enumerate(lif.get_iter_image()):
     print(f"Processing image {image_idx + 1}/48")
@@ -49,18 +52,18 @@ for image_idx, image in enumerate(lif.get_iter_image()):
         if channel == 0:
             z_stack = np.stack(z_slices, axis=0)  # Shape: (75, 512, 512)
             max_projection = np.percentile(z_stack,red_percentile, axis=0)  # Shape: (512, 512)
-            channel_max_projections.append(max_projection)
+            
         # GREEN Channel
         if channel == 1:
             z_stack = np.stack(z_slices, axis=0)  # Shape: (75, 512, 512)
             max_projection = np.percentile(z_stack,green_percentile, axis=0)  # Shape: (512, 512)
-            channel_max_projections.append(max_projection)
+            
         # BLUE Channel
         if channel == 2:
             z_stack = np.stack(z_slices, axis=0)  # Shape: (75, 512, 512)
             max_projection = np.percentile(z_stack,blue_percentile, axis=0)  # Shape: (512, 512)
-            channel_max_projections.append(max_projection)
             
+        channel_max_projections.append(max_projection)
     # Combine 3 channels into RGB
     rgb_image = np.stack([
         channel_max_projections[0],  # Red 
