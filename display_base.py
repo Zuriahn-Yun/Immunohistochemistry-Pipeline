@@ -12,6 +12,7 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import kaleido
 from analyzetest import closest_color
+import plotly.express as px
 
 url = "IHC Cohort 2 6-4-25.lif"
 lif = LifFile(url)
@@ -19,22 +20,22 @@ lif = LifFile(url)
 image_list = []
 
 basic_colors = {
-    "black": [0,0,0],
-    "white": [255,255,255],
-    "red": [255,0,0],
-    "lime": [0,255,0],
-    "blue": [0,0,255],
-    "yellow": [255,255,0],
-    "cyan": [0,255,255],
-    "magenta": [255,0,255],
-    "silver": [192,192,192],
-    "gray": [128,128,128],
-    "maroon": [128,0,0],
-    "olive": [128,128,0],
-    "green": [0,128,0],
-    "purple": [128,0,128],
-    "teal": [0,128,128],
-    "navy":[0,0,128],    
+    "Black": [0,0,0],
+    "White": [255,255,255],
+    "Red": [255,0,0],
+    "Lime": [0,255,0],
+    "Blue": [0,0,255],
+    "Yellow": [255,255,0],
+    "Cyan": [0,255,255],
+    "Magenta": [255,0,255],
+    "Silver": [192,192,192],
+    "Gray": [128,128,128],
+    "Maroon": [128,0,0],
+    "Olive": [128,128,0],
+    "Green": [0,128,0],
+    "Purple": [128,0,128],
+    "Teal": [0,128,128],
+    "Navy":[0,0,128],    
     }
 
 # Percentiles 75 = 0.75 percent
@@ -96,22 +97,47 @@ for image_idx, image in enumerate(lif.get_iter_image()):
     
     row,column,depth = rgb_image.shape
     
-    # for r in range(row):
-    #     for c in range(column):
-    #         r,g,b = rgb_image[r,c]
-    #         pixel = [r,g,b]
-    #         color  = closest_color(pixel)
+    color_count = {
+    "Black": 0,
+    "White": 0,
+    "Red": 0,
+    "Lime": 0,
+    "Blue": 0,
+    "Yellow": 0,
+    "Cyan": 0,
+    "Magenta": 0,
+    "Silver": 0,
+    "Gray": 0,
+    "Maroon": 0,
+    "Olive": 0,
+    "Green": 0,
+    "Purple": 0,
+    "Teal": 0,
+    "Navy": 0,    
+    }
     
-    for key,value in basic_colors.items():
-        print(key)
-        
-    exit()
+    for r in range(row):
+        for c in range(column):
+            r,g,b = rgb_image[r,c]
+            pixel = [r,g,b]
+            color  = closest_color(pixel)
+            if color in color_count:
+                val = color_count[color]
+                val +=1
+                color_count[color] = val
+            else:
+                print("Error Color Not Found")
+                
+    print(color_count)
     
     # Convert to PIL and display
     composite_image = Image.fromarray(rgb_image)
-    print(composite_image.size)
-    exit()
+
     image_list.append(composite_image)
+    
+    fig = px.imshow(composite_image)
+    fig.show()
+    exit()
     
 np_images = [np.array(img) for img in image_list]
 total = len(np_images)
