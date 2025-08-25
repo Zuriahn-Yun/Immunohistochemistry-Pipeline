@@ -51,7 +51,7 @@ def closest_color(rgb):
     
     distance_value = 9999999999
     closest_color = "test"
-    print(rgb)
+    
     for key,val in basic_colors.items():
         curr_distance = math.dist(rgb,val)
         if curr_distance < distance_value:
@@ -59,29 +59,29 @@ def closest_color(rgb):
             closest_color = key
     return closest_color
 
-url = "IHC Cohort 2 6-4-25.lif"
+# url = "IHC Cohort 2 6-4-25.lif"
 
 
 # In this data I only have one frame per image 
-lif = LifFile(url)
-image_count = 0
-frame_count = 0
-colors = []
-for image in lif.get_iter_image():
-    image_count +=1
-    print(image.dims)
-    curr = image.get_frame()
-    for frame in image.get_iter_t():
-        frame_count +=1
-        for i in range(3):
-            frame = image.get_frame(c=i)
-        frame = image.get_frame(c=2)
-        img_array = np.array(frame)
-        print("IMAGE ARRAY")
-        print(img_array)
-        print(img_array.shape)
-        for row in img_array:
-            color = closest_color(rgb=row)
-            colors.append(color)
-    print(colors)
-    exit()
+# lif = LifFile(url)
+# image_count = 0
+# frame_count = 0
+# colors = []
+# for image in lif.get_iter_image():
+#     image_count +=1
+#     print(image.dims)
+#     curr = image.get_frame()
+#     for frame in image.get_iter_t():
+#         frame_count +=1
+#         for i in range(3):
+#             frame = image.get_frame(c=i)
+#         frame = image.get_frame(c=2)
+#         img_array = np.array(frame)
+#         print("IMAGE ARRAY")
+#         print(img_array)
+#         print(img_array.shape)
+#         for row in img_array:
+#             color = closest_color(rgb=row)
+#             colors.append(color) 
+#     print(colors)
+#     exit()

@@ -11,13 +11,31 @@ import pandas as pd
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import kaleido
-
+from analyzetest import closest_color
 
 url = "IHC Cohort 2 6-4-25.lif"
 lif = LifFile(url)
 
 image_list = []
 
+basic_colors = {
+    "black": [0,0,0],
+    "white": [255,255,255],
+    "red": [255,0,0],
+    "lime": [0,255,0],
+    "blue": [0,0,255],
+    "yellow": [255,255,0],
+    "cyan": [0,255,255],
+    "magenta": [255,0,255],
+    "silver": [192,192,192],
+    "gray": [128,128,128],
+    "maroon": [128,0,0],
+    "olive": [128,128,0],
+    "green": [0,128,0],
+    "purple": [128,0,128],
+    "teal": [0,128,128],
+    "navy":[0,0,128],    
+    }
 
 # Percentiles 75 = 0.75 percent
 red_percentile = 75
@@ -76,8 +94,23 @@ for image_idx, image in enumerate(lif.get_iter_image()):
     # Normalize and convert to uint8
     rgb_image = (rgb_image / rgb_image.max() * 255).astype(np.uint8)
     
+    row,column,depth = rgb_image.shape
+    
+    # for r in range(row):
+    #     for c in range(column):
+    #         r,g,b = rgb_image[r,c]
+    #         pixel = [r,g,b]
+    #         color  = closest_color(pixel)
+    
+    for key,value in basic_colors.items():
+        print(key)
+        
+    exit()
+    
     # Convert to PIL and display
     composite_image = Image.fromarray(rgb_image)
+    print(composite_image.size)
+    exit()
     image_list.append(composite_image)
     
 np_images = [np.array(img) for img in image_list]
