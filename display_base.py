@@ -156,5 +156,8 @@ for idx, img in enumerate(image_list):
         row=row, col=col
     )
 
+
+# Certain pixels are green but are not being registered as close to green when analysis is done 
+# Try changing the gamma 
 fig.update_layout(height=512*rows, width=512*cols, title_text="IHC Cohort 2 6-4-25: Red Percentile: " + str(red_percentile) + ", Blue Percentile: " + str(blue_percentile) + ", Green Percentile: " + str(green_percentile))
 fig.show()
