@@ -140,15 +140,13 @@ for image_idx, image in enumerate(lif.get_iter_image()):
     print(intensity_values)  
     print("COLOR COUNT") 
     print(color_count)
-    
-    intensity_values_list_of_lists = [[k, v] for k, v in intensity_values.items()]
-    color_count_lists_of_lists = [[k, v] for k, v in color_count.items()]
-    print(color_count_lists_of_lists)
-    sorted_intensity = sorted(intensity_values_list_of_lists,key=lambda x:x[1],reverse=True)
-    print(sorted_intensity)
-    
-    sorted_count = sorted(color_count, key=lambda x: sorted_intensity.index(x))
-    print(sorted_count)
+    merged = [[color, color_count[color], intensity_values[color]] for color in intensity_values]
+
+    # sort by intensity (3rd element, index 2)
+    sorted_merged = sorted(merged, key=lambda x: x[2], reverse=True)
+    print("sorted merged")
+    print(sorted_merged)
+       
     exit()
     
     # Convert to PIL and display
