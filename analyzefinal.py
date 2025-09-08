@@ -37,16 +37,16 @@ def darkness_luminosity(row):
   Returns:
       int : darkness value
   """
-  print(row)
+  #print(row)
   return (0.299 * row[0] + 0.587 * row[1] + 0.114 * row[2])
 
 def closest_color(rgb):
     basic_colors = {
     "Black": [0,0,0],
     "White":[255,255,255],
-    "#00001c(Very Dark Blue)":[0,0,28],
-    "#001400(Very Dark Green)": [0,20,0],
-    "1c0000(Very Dark Red)":[28,0,0],
+    "BLue":[0,0,28],
+    "Green": [0,20,0],
+    "Red":[28,0,0],
     }
     
     distance_value = 9999999999

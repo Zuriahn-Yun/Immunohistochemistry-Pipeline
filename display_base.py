@@ -105,17 +105,19 @@ for image_idx, image in enumerate(lif.get_iter_image()):
     #"#001400(Very Dark Green)":0,
     "Green": 0,
     #"1c0000(Very Dark Red)":0,
-    "Rd": 0,
+    "Red": 0,
     #"#00001c(Very Dark Blue)":0,
     "Blue": 0,
     }
     
-    intensity = {
-        "Black Intensity" : 0,
-        "White Intensity": 0,
-        "Green Intensity": 0,
-        "Red Intensity": 0,
-        "Blue Intensity": 0,
+    # Dictionary to hold the Intensity summations -> each pixel has an intensity, we will just sum it all together for whichever category it is and from there decide
+    # Which is the most intense
+    intensity_values = {
+        "Black" : 0,
+        "White": 0,
+        "Green": 0,
+        "Red": 0,
+        "Blue": 0,
     }
     
     for r in range(row):
@@ -130,11 +132,14 @@ for image_idx, image in enumerate(lif.get_iter_image()):
             if color in color_count:
                 color_count[color] +=1
                 intensity = darkness_luminosity(rgb_image[r,c])
-                
+                intensity_values[color] += int(intensity)
             else:
                 print("Error Color Not Found")
                 
+    print(intensity_values)   
     print(color_count)
+    
+    exit()
     
     # Convert to PIL and display
     composite_image = Image.fromarray(rgb_image)
