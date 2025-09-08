@@ -18,7 +18,7 @@ url = "IHC Cohort 2 6-4-25.lif"
 lif = LifFile(url)
 
 image_list = []
-
+all_results = []
 
 # These dont get used, here as a reference
 basic_colors = {
@@ -136,30 +136,21 @@ for image_idx, image in enumerate(lif.get_iter_image()):
             else:
                 print("Error Color Not Found")
                 
-    
-    
-    print("INTENSITY")
-    print(intensity_values)  
-    print("COLOR COUNT") 
-    print(color_count)
-    merged = [[color, color_count[color], intensity_values[color]] for color in intensity_values]
+    process_image(all_results,url,image_idx,intensity_values,color_count)
+   
+    # merged = [[color, color_count[color], intensity_values[color]] for color in intensity_values]
 
-    # sort by intensity (3rd element, index 2)
-    sorted_merged = sorted(merged, key=lambda x: x[2], reverse=True)
+    # # sort by intensity (3rd element, index 2)
+    # sorted_merged = sorted(merged, key=lambda x: x[2], reverse=True)
     
     # lists are sorted like this [COLOR, COLOR COUNT, INTENSITY VALUES]
-    print("SORTED AND MERGED LISTS")
-    print(sorted_merged)
-       
-    exit()
+    # print("SORTED AND MERGED LISTS")
+    # print(sorted_merged)
     
     # Convert to PIL and display
     composite_image = Image.fromarray(rgb_image)
 
     image_list.append(composite_image)
-    
-    fig = px.imshow(composite_image)
-    fig.show()
     
     
 np_images = [np.array(img) for img in image_list]
@@ -184,3 +175,14 @@ for idx, img in enumerate(image_list):
 # Try changing the gamma 
 fig.update_layout(height=512*rows, width=512*cols, title_text="IHC Cohort 2 6-4-25: Red Percentile: " + str(red_percentile) + ", Blue Percentile: " + str(blue_percentile) + ", Green Percentile: " + str(green_percentile))
 fig.show()
+print(all_results)
+# Convert to DataFrame
+df = pd.DataFrame(all_results)
+
+# Sort if needed
+df = df.sort_values(by=["File", "Image", "Intensity"], ascending=[True, True, False])
+
+# Save once to CSV
+df.to_csv("all_image_data.csv", index=False)
+
+print(df.head())
