@@ -6,3 +6,5 @@ below 100% Bring down the intensity of the red and blue so the majority are less
 
 
 Goal: Mask each color and analyze the red separetely before then looking at the colocalization with the blue. The green is the same as the red?. Capillaries that are running thourhg the slices should not be part of the analysis. 
+
+

@@ -113,18 +113,21 @@ for image_idx, image in enumerate(lif.get_iter_image()):
     "Green": 0,
     "Purple": 0,
     "Teal": 0,
-    "Navy": 0,    
+    "Navy": 0,
+    "DarkGreen": 0,
+    "MediumGreen": 0, 
+    "ForestGreen": 0,
+    "#001400(Very Dark Green)":0,
+    "1c0000(Very Dark Red)":0,
     }
     
     for r in range(row):
         for c in range(column):
-            r,g,b = rgb_image[r,c]
-            pixel = [r,g,b]
+            red_val,green_Val,blue_val = rgb_image[r,c]
+            pixel = [red_val,green_Val,blue_val]
             color  = closest_color(pixel)
             if color in color_count:
-                val = color_count[color]
-                val +=1
-                color_count[color] = val
+                color_count[color] +=1
             else:
                 print("Error Color Not Found")
                 
@@ -137,7 +140,7 @@ for image_idx, image in enumerate(lif.get_iter_image()):
     
     fig = px.imshow(composite_image)
     fig.show()
-    exit()
+    
     
 np_images = [np.array(img) for img in image_list]
 total = len(np_images)

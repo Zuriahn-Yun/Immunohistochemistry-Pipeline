@@ -29,6 +29,16 @@ Stack them -> RGB Images.....
 ------------------------------------------------------------------
 """
 
+def darkness_luminosity(row):
+  """ Using the NTSC formula to convert RGB values into Grayscale, this formula closely represents the average persons relative perception of brighness in red,green and blue light. Smaller values represent darker pixels.
+
+  Args:
+      row (int): a row from an image dataframe and contains red,green and blue columns
+  Returns:
+      int : darkness value
+  """
+  return (0.299 * row['Red'] + 0.587 * row['Green'] + 0.114 * row['Blue'])
+
 def closest_color(rgb):
     basic_colors = {
     "Black": [0,0,0],
@@ -46,7 +56,12 @@ def closest_color(rgb):
     "Green": [0,128,0],
     "Purple": [128,0,128],
     "Teal": [0,128,128],
-    "Navy":[0,0,128],    
+    "Navy":[0,0,128],
+    "DarkGreen": [0,100,0],
+    "MediumGreen": [0,150,0], 
+    "ForestGreen": [34,139,34],
+    "#001400(Very Dark Green)": [0,20,0],
+    "1c0000(Very Dark Red)":[28,0,0],
     }
     
     distance_value = 9999999999
