@@ -11,7 +11,7 @@ import pandas as pd
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import kaleido
-from analyzefinal import closest_color
+from analyzefinal import closest_color,darkness_luminosity
 import plotly.express as px
 
 url = "IHC Cohort 2 6-4-25.lif"
@@ -102,9 +102,20 @@ for image_idx, image in enumerate(lif.get_iter_image()):
     color_count = {
     "Black": 0,
     "White": 0,
-    "#001400(Very Dark Green)":0,
-    "1c0000(Very Dark Red)":0,
-    "#00001c(Very Dark Blue)":0,
+    #"#001400(Very Dark Green)":0,
+    "Green": 0,
+    #"1c0000(Very Dark Red)":0,
+    "Rd": 0,
+    #"#00001c(Very Dark Blue)":0,
+    "Blue": 0,
+    }
+    
+    intensity = {
+        "Black Intensity" : 0,
+        "White Intensity": 0,
+        "Green Intensity": 0,
+        "Red Intensity": 0,
+        "Blue Intensity": 0,
     }
     
     for r in range(row):
@@ -112,8 +123,14 @@ for image_idx, image in enumerate(lif.get_iter_image()):
             red_val,green_Val,blue_val = rgb_image[r,c]
             pixel = [red_val,green_Val,blue_val]
             color  = closest_color(pixel)
+            
+            # Get the intensity here 
+            intensity = darkness_luminosity(rgb_image[r,c])
+            
             if color in color_count:
                 color_count[color] +=1
+                intensity = darkness_luminosity(rgb_image[r,c])
+                
             else:
                 print("Error Color Not Found")
                 
