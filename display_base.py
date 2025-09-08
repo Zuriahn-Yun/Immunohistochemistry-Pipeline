@@ -11,7 +11,7 @@ import pandas as pd
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import kaleido
-from analyzetest import closest_color
+from analyzefinal import closest_color
 import plotly.express as px
 
 url = "IHC Cohort 2 6-4-25.lif"
@@ -19,6 +19,8 @@ lif = LifFile(url)
 
 image_list = []
 
+
+# These dont get used, here as a reference
 basic_colors = {
     "Black": [0,0,0],
     "White": [255,255,255],
@@ -100,25 +102,9 @@ for image_idx, image in enumerate(lif.get_iter_image()):
     color_count = {
     "Black": 0,
     "White": 0,
-    "Red": 0,
-    "Lime": 0,
-    "Blue": 0,
-    "Yellow": 0,
-    "Cyan": 0,
-    "Magenta": 0,
-    "Silver": 0,
-    "Gray": 0,
-    "Maroon": 0,
-    "Olive": 0,
-    "Green": 0,
-    "Purple": 0,
-    "Teal": 0,
-    "Navy": 0,
-    "DarkGreen": 0,
-    "MediumGreen": 0, 
-    "ForestGreen": 0,
     "#001400(Very Dark Green)":0,
     "1c0000(Very Dark Red)":0,
+    "#00001c(Very Dark Blue)":0,
     }
     
     for r in range(row):
