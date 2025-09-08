@@ -29,6 +29,20 @@ Stack them -> RGB Images.....
 ------------------------------------------------------------------
 """
 
+def process_image(all_results,file_name, image_index, intensity_values, color_count):
+    """
+    Merge intensity + color_count into one row per color,
+    and append to the global results list.
+    """
+    for color in intensity_values:
+        all_results.append({
+            "File": file_name,
+            "Image": image_index,
+            "Color": color,
+            "Color_Count": color_count[color],
+            "Intensity": intensity_values[color]
+        })
+        
 def darkness_luminosity(row):
   """ Using the NTSC formula to convert RGB values into Grayscale, this formula closely represents the average persons relative perception of brighness in red,green and blue light. Smaller values represent darker pixels.
 

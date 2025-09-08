@@ -11,7 +11,7 @@ import pandas as pd
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import kaleido
-from analyzefinal import closest_color,darkness_luminosity
+from analyzefinal import closest_color,darkness_luminosity,process_image
 import plotly.express as px
 
 url = "IHC Cohort 2 6-4-25.lif"
@@ -135,6 +135,8 @@ for image_idx, image in enumerate(lif.get_iter_image()):
                 intensity_values[color] += int(intensity)
             else:
                 print("Error Color Not Found")
+                
+    
     
     print("INTENSITY")
     print(intensity_values)  
@@ -144,7 +146,9 @@ for image_idx, image in enumerate(lif.get_iter_image()):
 
     # sort by intensity (3rd element, index 2)
     sorted_merged = sorted(merged, key=lambda x: x[2], reverse=True)
-    print("sorted merged")
+    
+    # lists are sorted like this [COLOR, COLOR COUNT, INTENSITY VALUES]
+    print("SORTED AND MERGED LISTS")
     print(sorted_merged)
        
     exit()
