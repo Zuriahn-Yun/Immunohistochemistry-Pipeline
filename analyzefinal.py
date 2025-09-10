@@ -58,7 +58,7 @@ def closest_color(rgb):
     basic_colors = {
     "Black": [0,0,0],
     "White":[255,255,255],
-    "BLue":[0,0,28],
+    "Blue":[0,0,28],
     "Green": [0,20,0],
     "Red":[28,0,0],
     }
