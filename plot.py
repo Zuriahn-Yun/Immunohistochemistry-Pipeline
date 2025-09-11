@@ -1,32 +1,41 @@
 import pandas as pd
 import plotly.express as px
 
+# Load dataset
+df = pd.read_csv("cleaned.csv", header=None)
+df.columns = ["File", "Image", "Color", "Color_Count", "Intensity"]
 
-# THIS IS WRONG THIS DOESNT WORK 
-df = pd.read_csv("all_image_data.csv")
+# Convert to numeric
+df["Color_Count"] = pd.to_numeric(df["Color_Count"], errors="coerce")
+df["Intensity"] = pd.to_numeric(df["Intensity"], errors="coerce")
+df["Image"] = pd.to_numeric(df["Image"], errors="coerce")
 
-df["Total_Pixels"] = df.groupby(["File", "Image"])["Color_Count"].transform("sum")
-df["Percentage"] = df["Color_Count"] / df["Total_Pixels"] * 100
+# Compute percentages
+df["Total"] = df.groupby(["File", "Image"])["Color_Count"].transform("sum")
+df["Percentage"] = (df["Color_Count"] / df["Total"]) * 100
 
-fig = px.line(
-    df,
-    x="Image",
-    y="Percentage",
-    color="Color",
-    markers=True,
-    title="Pixel Composition per Image",
-    hover_data=["File", "Color_Count", "Intensity"]
-)
-fig.show()
+# Define custom line colors
+custom_colors = {
+    "Black": "black",
+    "White": "gray",
+    "Red": "red",
+    "Green": "green",
+    "Blue": "blue"
+}
 
-# Option 2: Stacked area chart (each image = 100%)
-fig2 = px.area(
-    df,
-    x="Image",
-    y="Percentage",
-    color="Color",
-    title="Pixel Composition (Stacked) per Image",
-    groupnorm="percent"  # ensures it stacks to 100%
-)
-
-fig2.show()
+# One line graph per file
+for file, subset in df.groupby("File"):
+    fig = px.line(
+        subset,
+        x="Image",
+        y="Percentage",
+        color="Color",
+        title=f"Color Percentages Across Images - {file}",
+        markers=True,
+        color_discrete_map=custom_colors  # Set Custom Colors
+    )
+    fig.update_layout(
+        yaxis_title="Percentage (%)",
+        xaxis_title="Image Number"
+    )
+    fig.show()
