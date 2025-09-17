@@ -49,12 +49,10 @@ for image_idx, image in enumerate(lif.get_iter_image()):
         channel_max_projections = []
             
         for channel in range(3):  # 3 channels (Red, Green, Blue)
-            # GRab all the Z-Slices
-            z_slices = []
-            for z in range(z_stack_size):
-                frame = image.get_frame(z=z, t=0, c=channel)
-                z_slices.append(np.array(frame))
-                
+            z_slices = [np.array(image.get_frame(z=z, t=0, c=channel)) 
+                    for z in range(z_stack_size)]
+        
+            z_stack = np.stack(z_slices, axis=0)  # Shape: (Z, H, W)
                 
                 # Stack and take maximum projection for this channel
                 # np.max -> for Maximum Intensity Projection
@@ -63,71 +61,60 @@ for image_idx, image in enumerate(lif.get_iter_image()):
                 # np.median -> for median Projection
                 # Could also try PCA
                 
-                # RED Channel
-                if channel == 0:
-                    z_stack = np.stack(z_slices, axis=0)  # Shape: (75, 512, 512)
-                    max_projection = np.percentile(z_stack,red_percentile, axis=0)  # Shape: (512, 512)
+            # RED Channel
+            if channel == 0:
+                z_stack = np.stack(z_slices, axis=0)  # Shape: (75, 512, 512)
+                max_projection = np.percentile(z_stack,red_percentile, axis=0)  # Shape: (512, 512)
                     
                 # GREEN Channel
-                if channel == 1:
-                    z_stack = np.stack(z_slices, axis=0)  # Shape: (75, 512, 512)
-                    max_projection = np.percentile(z_stack,green_percentile, axis=0)  # Shape: (512, 512)
+            elif channel == 1:
+                z_stack = np.stack(z_slices, axis=0)  # Shape: (75, 512, 512)
+                max_projection = np.percentile(z_stack,green_percentile, axis=0)  # Shape: (512, 512)
                     
                 # BLUE Channel
-                if channel == 2:
-                    z_stack = np.stack(z_slices, axis=0)  # Shape: (75, 512, 512)
-                    max_projection = np.percentile(z_stack,blue_percentile, axis=0)  # Shape: (512, 512)
+            else:
+                z_stack = np.stack(z_slices, axis=0)  # Shape: (75, 512, 512)
+                max_projection = np.percentile(z_stack,blue_percentile, axis=0)  # Shape: (512, 512)
                     
-                channel_max_projections.append(max_projection)
-            # Combine 3 channels into RGB
+            channel_max_projections.append(max_projection)
+        # Combine 3 channels into RGB
         rgb_image = np.stack([
         channel_max_projections[0],  # Red 
             channel_max_projections[1],  # Green 
             channel_max_projections[2]   # Blue 
-            ], axis=2)                      # Shape: (512, 512, 3)
+        ], axis=2)                      # Shape: (512, 512, 3)
             
         rgb_image_max = rgb_image.max()
-            # Normalize and convert to uint8
+         # Normalize and convert to uint8
+         
         rgb_image = (rgb_image / rgb_image_max * 255).astype(np.uint8)
-            
-        
             
         row,column,depth = rgb_image.shape
         
-            # merged = [[color, color_count[color], intensity_values[color]] for color in intensity_values]
+        # merged = [[color, color_count[color], intensity_values[color]] for color in intensity_values]
 
-            # # sort by intensity (3rd element, index 2)
-            # sorted_merged = sorted(merged, key=lambda x: x[2], reverse=True)
+        # # sort by intensity (3rd element, index 2)
+        # sorted_merged = sorted(merged, key=lambda x: x[2], reverse=True)
             
-            # lists are sorted like this [COLOR, COLOR COUNT, INTENSITY VALUES]
-            # print("SORTED AND MERGED LISTS")
-            # print(sorted_merged)
+        # lists are sorted like this [COLOR, COLOR COUNT, INTENSITY VALUES]
+        # print("SORTED AND MERGED LISTS")
+        # print(sorted_merged)
             
-            # Convert to PIL and display
+         # Convert to PIL and display
         composite_image = Image.fromarray(rgb_image)
 
         image_list.append(composite_image)
-            
-            
-np_images = [np.array(img) for img in image_list]
-total = len(np_images)
-cols = 6 
-rows = (total + cols - 1) // cols
-
-fig = make_subplots(rows=rows, cols=cols, subplot_titles=[f"Image {i+1}" for i in range(total)])
+        
+# Create output folder
+output_dir = "output_images"
+os.makedirs(output_dir, exist_ok=True)
 
 for idx, img in enumerate(image_list):
-    row = idx // cols + 1
-    col = idx % cols + 1
+    # Create subfolder (optional: group by batch of 50, etc.)
+    subfolder = os.path.join(output_dir, f"batch_{idx//50 + 1}")
+    os.makedirs(subfolder, exist_ok=True)
 
-            # Add image to subplot
-    fig.add_trace(
-        go.Image(z=img),
-        row=row, col=col
-        )
-            
-            # IF WE WANT TO DISPLAY USE THIS
-fig.update_layout(height=512*rows, width=512*cols, title_text="IHC Cohort 2 5-26-25: Red Percentile: " + str(red_percentile) + ", Blue Percentile: " + str(blue_percentile) + ", Green #Percentile: " + str(green_percentile))
-fig.show()
-name = "IHC Cohort 2 5-26-25"
-fig.write_image(f"{name}.jpeg", format="jpeg")
+    # Save as JPEG
+    save_path = os.path.join(subfolder, f"image_{idx+1}.jpeg")
+    img.save(save_path, "JPEG")
+    print(f"Saved {save_path}")
